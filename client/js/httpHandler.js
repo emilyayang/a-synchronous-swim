@@ -1,4 +1,4 @@
-(function () {
+(function () { //iife immediately invokign func express to preserve global vars
 
   const serverUrl = 'http://127.0.0.1:4000';
 
@@ -7,7 +7,7 @@
   //
 
   /////////////////////////////////////////////////////////////////////
-  // The ajax file uplaoder is provided for your convenience!
+  // The ajax file uploader is provided for your convenience!
   // Note: remember to fix the URL below.
   /////////////////////////////////////////////////////////////////////
 
@@ -17,7 +17,7 @@
     $.ajax({
       type: 'POST',
       data: formData,
-      url: serverUrl,
+      url: '/background.jpg', ////the url must match the one in the server, server will be listening for this endpoint. will default to wherever this server is 
       cache: false,
       contentType: false,
       processData: false,
@@ -27,13 +27,26 @@
       }
     })
   }
-  // $.get(serverUrl, console.log("swim"));
-  // jQuery.get(url[, data][, success][, dataType])
 
-  $.get(serverUrl, function (data) {
-    // console.log('this should be a random direction:', data)
-    SwimTeam.move(data)
-  });
+  const fetchCommand = () => {
+    $.ajax({
+      type: 'GET',
+      url: serverUrl,
+      success: (command) => {
+        SwimTeam.move(command);
+      },
+      complete: () => {
+        setTimeout(fetchCommand, 10) //prevents backup like set interval
+      }
+    });
+  }
+  setTimeout(fetchCommand, 0)
+  // setInterval(fetchCommand,200)
+
+  // $.get(serverUrl, function (data) {
+  //   // console.log('this should be a random direction:', data)
+  //   SwimTeam.move(data);
+  // });
 
 
   $('form').on('submit', function (e) {
