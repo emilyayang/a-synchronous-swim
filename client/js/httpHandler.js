@@ -1,6 +1,6 @@
 (function () {
 
-  const serverUrl = 'http://127.0.0.1:3000';
+  const serverUrl = 'http://127.0.0.1:4000';
 
   //
   // TODO: build the swim command fetcher here
@@ -17,7 +17,7 @@
     $.ajax({
       type: 'POST',
       data: formData,
-      url: 'http://127.0.0.1:8080/?',
+      url: serverUrl,
       cache: false,
       contentType: false,
       processData: false,
@@ -25,8 +25,15 @@
         // reload the page
         window.location = window.location.href;
       }
-    });
-  };
+    })
+  }
+  // $.get(serverUrl, console.log("swim"));
+  // jQuery.get(url[, data][, success][, dataType])
+
+  $.get(serverUrl, function (data) {
+    // console.log('this should be a random direction:', data)
+    SwimTeam.move(data)
+  });
 
 
   $('form').on('submit', function (e) {
